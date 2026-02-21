@@ -4,10 +4,9 @@ import os
 import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-# ==========================================================
 # SKILL COLUMN ALIASES
 # columns we recognise as skill sources across all datasets
-# ==========================================================
+
 SKILL_COLUMN_ALIASES = [
     'skills',
     'core_skills',
@@ -27,7 +26,7 @@ INTERNAL_COLUMNS = {'skill_list', 'skill_count', 'skills_combined'}
 TFIDF_SAVE_PATH = "models/tfidf_skills.joblib"
 
 
-# ==========================================================
+
 # DETECT AND MERGE SKILL COLUMNS
 # ==========================================================
 def _get_skills_series(df):
