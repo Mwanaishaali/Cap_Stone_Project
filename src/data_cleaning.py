@@ -12,7 +12,7 @@ def load_datasets(data_folder='DATA'):
         "Coursera.csv",
         "reviews.csv",
         "reviews_by_course.csv",
-        "cbc_data.csv",  
+        "cbc_pathways.csv",  
     ]
     datasets = {}
     for file in files:
