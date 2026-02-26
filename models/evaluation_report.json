@@ -1,0 +1,26 @@
+{
+  "model_version": "3.0 \u2014 Semantic Pipeline + Kenya Education Layer",
+  "architecture": "SentenceTransformer(all-MiniLM-L6-v2) + NearestNeighbors + GradientBoosting",
+  "occupations": 894,
+  "career_families": 12,
+  "courses": 8050,
+  "skill_dimensions": 35,
+  "skill_synonym_map": 434,
+  "cbc_pathways": 26,
+  "kcse_subjects": 31,
+  "career_goal_boosts": 188,
+  "semantic_mode": true,
+  "mean_precision_5": 0.683,
+  "mean_score_spread": 74.4,
+  "improvements_over_v1": [
+    "SOC code career family mapping \u2014 eliminates fuzzy match errors",
+    "Sentence Transformer semantic encoding \u2014 works for any skill, any language",
+    "GBM ranker with learned weights \u2014 replaces hardcoded 60/25/15 formula",
+    "Kenya CBC pathway implicit skill enrichment \u2014 22 pathways",
+    "Kenya KCSE subject implicit skill enrichment \u2014 28 subjects",
+    "250+ skill synonym map \u2014 enriches queries with O*NET vocabulary",
+    "150+ career goal boost keywords across 15 families",
+    "Course recommendations via TF-IDF over unified catalogue",
+    "All 6 user types: CBC, 8-4-4, Graduate, Professional, Postgraduate, Diploma"
+  ]
+}
