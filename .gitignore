@@ -239,3 +239,6 @@ logs/
 # OS junk
 .DS_Store
 Thumbs.db
+
+
+DATA/new\ folders/posting.csv

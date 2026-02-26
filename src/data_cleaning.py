@@ -2,27 +2,6 @@ import pandas as pd
 import numpy as np
 import os
 
-def load_datasets(data_folder='DATA'):
-    """Finds and loads the 8 specific workforce datasets."""
-    files = [
-        "ai_impact_jobs_2010_2025.csv",
-        "AI_Impact_on_Jobs_2030.csv",
-        "ai_job_trends_dataset.csv",
-        "career_dataset_large.xlsx",
-        "Coursera.csv",
-        "reviews.csv",
-        "reviews_by_course.csv",
-        "cbc_pathways.csv",  
-    ]
-    datasets = {}
-    for file in files:
-        path = os.path.join(data_folder, file)
-        if os.path.exists(path):
-            datasets[file] = pd.read_csv(path) if file.endswith('.csv') else pd.read_excel(path)
-        else:
-            print(f"WARNING: {file} not found in {data_folder}")
-    return datasets
-
 
 # ---------------------------------------------------------------------------
 
