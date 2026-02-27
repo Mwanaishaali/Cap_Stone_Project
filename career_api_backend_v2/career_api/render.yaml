@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: careeriq-api
+    runtime: python
+    region: oregon
+
+    # Build: install dependencies + download model assets from Google Drive
+    buildCommand: |
+      pip install -r requirements.txt
+      pip install gdown
+      python download_assets.py
+
+    # Start the FastAPI server
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+
+    # Environment variables — set values in Render dashboard
+    envVars:
+      - key: ARTIFACTS_DIR
+        value: /opt/render/project/src/artifacts
+      - key: PROCESSED_DIR
+        value: /opt/render/project/src/DATA/processed
+      - key: MODEL_DIR
+        value: /opt/render/project/src/models
+      - key: ALLOWED_ORIGINS
+        value: '["*"]'
+      - key: SENTENCE_TRANSFORMER_MODEL
+        value: all-MiniLM-L6-v2
+      # ── Set these in Render dashboard → Environment (paste your Drive folder IDs)
+      - key: GDRIVE_MODELS_ID
+        sync: false        # means: set manually in dashboard, not committed to git
+      - key: GDRIVE_ARTIFACTS_ID
+        sync: false
+      - key: GDRIVE_PROCESSED_ID
+        sync: false
+
+    # Free tier settings
+    plan: free
+    autoDeploy: true       # redeploys automatically when you push to GitHub
