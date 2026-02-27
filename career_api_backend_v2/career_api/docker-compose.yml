@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  career-api:
+    build: .
+    container_name: career-api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Map your capstone project folders into the container
+      - ../artifacts:/artifacts:ro
+      - ../DATA/processed:/data:ro
+      - ../models:/models:ro
+    environment:
+      - ARTIFACTS_DIR=/artifacts
+      - PROCESSED_DIR=/data
+      - MODEL_DIR=/models
+      - ALLOWED_ORIGINS=["http://localhost:3000","http://localhost:5173"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
