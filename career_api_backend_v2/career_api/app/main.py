@@ -6,6 +6,7 @@ Production-ready REST API wrapping the 7-notebook ML pipeline.
 
 from __future__ import annotations
 
+import threading
 import time
 from contextlib import asynccontextmanager
 
@@ -19,13 +20,21 @@ from app.core.config import settings
 from app.core.engine import engine
 
 
-# ── Lifespan: load all ML artifacts once at startup ──────────────────────────
+def _load_engine_background():
+    """Load ML models in a background thread so port binds immediately."""
+    print("⚙️  Loading ML artifacts in background…")
+    try:
+        engine.load()
+        print("✅  Career Intelligence Engine ready.")
+    except Exception as e:
+        print(f"❌  Engine load failed: {e}")
+
+
+# ── Lifespan: bind port FIRST, load models in background ─────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Load models on startup; release on shutdown."""
-    print("⚙️  Loading ML artifacts…")
-    engine.load()
-    print("✅  Career Intelligence Engine ready.")
+    thread = threading.Thread(target=_load_engine_background, daemon=True)
+    thread.start()
     yield
     print("🛑  Shutting down Career Intelligence Engine.")
 
@@ -45,14 +54,13 @@ app = FastAPI(
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # allow all origins including file://
-    allow_credentials=False,      # must be False when allow_origins=["*"]
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-# ── Request timing middleware ─────────────────────────────────────────────────
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
     t0 = time.perf_counter()
@@ -61,7 +69,6 @@ async def add_process_time_header(request: Request, call_next):
     return response
 
 
-# ── Global exception handler ──────────────────────────────────────────────────
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
@@ -74,11 +81,9 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-# ── Routers ───────────────────────────────────────────────────────────────────
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 
-# ── Root health check ─────────────────────────────────────────────────────────
 @app.get("/", tags=["Health"])
 async def root():
     return {
@@ -93,11 +98,11 @@ async def root():
 @app.get("/health", tags=["Health"])
 async def health_check():
     return {
-        "status": "healthy",
+        "status": "healthy" if engine.is_loaded else "loading",
         "engine": {
-            "loaded": engine.is_loaded,
-            "occupations": engine.occupation_count,
-            "courses": engine.course_count,
+            "loaded":        engine.is_loaded,
+            "occupations":   engine.occupation_count,
+            "courses":       engine.course_count,
             "semantic_mode": engine.semantic_available,
         },
     }
