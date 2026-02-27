@@ -1,16 +1,12 @@
-# 🎯 Kenya Career & Skills Intelligence System
+# Career & Skills Intelligence System
 
 > An AI-powered career recommendation platform that helps Kenyan learners and professionals discover their best-fit careers, understand skill gaps, assess automation risk, and receive personalised learning roadmaps.
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python)
-![ML](https://img.shields.io/badge/ML-scikit--learn-orange)
-![NLP](https://img.shields.io/badge/NLP-SentenceTransformers-green)
-![Careers](https://img.shields.io/badge/Careers-894%20Occupations-teal)
-![Courses](https://img.shields.io/badge/Courses-8%2C050%20MOOCs-purple)
+
 
 ---
 
-## 📋 Table of Contents
+##  Table of Contents
 
 - [Overview](#-overview)
 - [System Architecture](#-system-architecture)
@@ -28,22 +24,22 @@
 
 ---
 
-## 🌍 Overview
+##  Overview
 
-The Kenya Career & Skills Intelligence System bridges the gap between what Kenyan learners study and what the job market demands. It serves students from both the legacy **8-4-4 curriculum** and the new **Competency-Based Curriculum (CBC)**, as well as TVET diploma holders, graduates, and working professionals.
+The  Career & Skills Intelligence System bridges the gap between what Kenyan learners study and what the job market demands. It serves students from both the legacy **8-4-4 curriculum** and the new **Competency-Based Curriculum (CBC)**, as well as TVET diploma holders, graduates, and working professionals.
 
 **What the system produces for each user:**
 
 | Output | Description |
 |--------|-------------|
-| 🎯 **Top-5 Career Recommendations** | Personalised matches from 894 O\*NET occupations with alignment scores |
-| ⚡ **AI Risk Rating** | Automation risk per career — Low / Medium / High / Very High |
-| 📊 **Skills Gap Report** | Critical gaps, moderate gaps, and transferable strengths |
-| 📚 **Learning Path** | Curated course sequence (Foundation → Intermediate → Advanced) from Coursera, edX, and Udemy |
+|  **Top-5 Career Recommendations** | Personalised matches from 894 O\*NET occupations with alignment scores |
+|  **AI Risk Rating** | Automation risk per career — Low / Medium / High / Very High |
+|  **Skills Gap Report** | Critical gaps, moderate gaps, and transferable strengths |
+|  **Learning Path** | Curated course sequence (Foundation → Intermediate → Advanced) from Coursera, edX, and Udemy |
 
 ---
 
-## 🏗 System Architecture
+##  System Architecture
 
 ```
 User Input  (skills + education level + career goal)
@@ -83,7 +79,7 @@ User Input  (skills + education level + career goal)
 
 ---
 
-## 📦 Datasets
+##  Datasets
 
 | Dataset | Source | Records | Role |
 |---------|--------|---------|------|
@@ -103,7 +99,7 @@ User Input  (skills + education level + career goal)
 
 ---
 
-## 📓 Notebook Pipeline
+##  Notebook Pipeline
 
 Run notebooks **in order** — each reads from outputs of the previous.
 
@@ -150,7 +146,7 @@ DATA/new/  (raw sources)
 
 ---
 
-## 🤖 Models & Algorithms
+##  Models & Algorithms
 
 ### Stage 1 — Career Recommendation
 
@@ -189,7 +185,7 @@ Future-Proof Score (0–100) = 40% demand + 40% (1 − risk) + 20% salary
 
 ---
 
-## 📤 Key Outputs
+##  Key Outputs
 
 ```python
 {
@@ -225,7 +221,7 @@ Future-Proof Score (0–100) = 40% demand + 40% (1 − risk) + 20% salary
 
 ---
 
-## ⚙️ Setup & Installation
+##  Setup & Installation
 
 ### Prerequisites
 
@@ -269,7 +265,7 @@ jupyter nbconvert --to notebook --execute 07_full_system_integration.ipynb --inp
 
 ---
 
-## 🚀 Usage
+##  Usage
 
 ```python
 import joblib
@@ -300,7 +296,7 @@ print(f"Critical Gaps:    {top['skills_gap']['critical']}")
 
 ---
 
-## 👥 Supported User Types
+##  Supported User Types
 
 | `user_type` | Description | O\*NET Zone |
 |-------------|-------------|-------------|
@@ -313,7 +309,7 @@ print(f"Critical Gaps:    {top['skills_gap']['critical']}")
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 ├── DATA/
@@ -340,7 +336,7 @@ print(f"Critical Gaps:    {top['skills_gap']['critical']}")
 
 ---
 
-## 🔑 Key Design Decisions
+##  Key Design Decisions
 
 **SOC-Code-Based Career Family Mapping**
 Career families are assigned using the first 2 digits of each O\*NET SOC code rather than fuzzy string matching against BLS titles. The prior approach (cutoff=0.55) misclassified occupations like "Security Guards" → Technology and "Shoe Machine Operators" → Technology. SOC-prefix mapping is deterministic and fully authoritative.
@@ -356,7 +352,7 @@ Course recommendations are generated per skill gap rather than per career title 
 
 ---
 
-## ⚠️ Known Limitations
+##  Known Limitations
 
 | Limitation | Impact |
 |------------|--------|
@@ -368,7 +364,7 @@ Course recommendations are generated per skill gap rather than per career title 
 
 ---
 
-## 🗺 Roadmap
+##  Roadmap
 
 - [ ] Build labelled evaluation dataset via user study (50–100 participants per user type)
 - [ ] Integrate Frey & Osborne (2013) automation probability data for risk calibration
@@ -380,7 +376,7 @@ Course recommendations are generated per skill gap rather than per career title 
 
 ---
 
-## 📄 License
+##  License
 
 This project is for academic and research use. Dataset licenses apply individually — refer to O\*NET, BLS, LinkedIn, Coursera, edX, and Udemy terms of service for data usage rights.
 
