@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — CareerIQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <!-- Chart.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="logo">Career<span>IQ</span></a>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="form.html" class="btn-nav">Get Matched →</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="dashboard-page">
+    <div class="container">
+
+      <!-- Header -->
+      <div class="dash-header">
+        <div>
+          <div class="section-label">Intelligence Dashboard</div>
+          <h1 class="dash-title">Kenya Career Market Overview</h1>
+          <p class="dash-sub">Real-time insights from O*NET, BLS projections, and LinkedIn job posting data.</p>
+        </div>
+        <div class="dash-filters">
+          <select id="filterFamily" class="filter-select">
+            <option value="">All Career Families</option>
+          </select>
+          <button class="btn-primary" id="refreshBtn">Refresh Data</button>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="dashLoading" class="loading-state" style="min-height:300px;">
+        <div class="spinner" style="width:40px;height:40px;border-width:3px;"></div>
+        <p class="loading-text">Loading market data…</p>
+      </div>
+
+      <!-- Content -->
+      <div id="dashContent" class="hidden">
+
+        <!-- KPI row -->
+        <div class="kpi-row" id="kpiRow"></div>
+
+        <!-- Charts row -->
+        <div class="charts-row">
+          <div class="chart-card chart-wide">
+            <div class="chart-card-header">
+              <h3 class="chart-title">AI Risk vs Future-Proof Score</h3>
+              <p class="chart-sub">Each dot is an occupation — lower risk + higher future-proof = top-right quadrant</p>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="scatterChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h3 class="chart-title">Risk Distribution</h3>
+              <p class="chart-sub">Occupations by AI replacement risk level</p>
+            </div>
+            <div class="chart-wrap chart-wrap-sm">
+              <canvas id="riskDonut"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sector table + Emerging careers -->
+        <div class="bottom-row">
+          <div class="sector-card">
+            <div class="chart-card-header">
+              <h3 class="chart-title">Sector Risk Summary</h3>
+              <p class="chart-sub">Average AI risk per career family</p>
+            </div>
+            <div id="sectorList"></div>
+          </div>
+
+          <div class="emerging-card">
+            <div class="chart-card-header">
+              <h3 class="chart-title">🚀 Emerging Careers</h3>
+              <p class="chart-sub">High future-proof score + Low AI risk + High/Medium demand</p>
+            </div>
+            <div id="emergingList"></div>
+          </div>
+        </div>
+
+        <!-- Top careers table -->
+        <div class="table-card">
+          <div class="chart-card-header">
+            <h3 class="chart-title">Top 10 Most Future-Proof Careers</h3>
+            <p class="chart-sub">Ranked by composite future-proof score (demand + AI shield + salary)</p>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="topCareersTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Occupation</th>
+                  <th>Career Family</th>
+                  <th>Future-Proof</th>
+                  <th>AI Risk</th>
+                  <th>Demand</th>
+                  <th>Median Wage</th>
+                </tr>
+              </thead>
+              <tbody id="topCareersBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

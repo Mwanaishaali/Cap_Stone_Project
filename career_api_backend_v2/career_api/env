@@ -1,0 +1,7 @@
+ARTIFACTS_DIR=C:\Users\ELITEBOOK\Documents\DSF-FT14\phase_5\Cap_Stone_Project\artifacts
+PROCESSED_DIR=C:\Users\ELITEBOOK\Documents\DSF-FT14\phase_5\Cap_Stone_Project\DATA\processed
+MODEL_DIR=C:\Users\ELITEBOOK\Documents\DSF-FT14\phase_5\Cap_Stone_Project\models
+ALLOWED_ORIGINS=["*"]
+SENTENCE_TRANSFORMER_MODEL=all-MiniLM-L6-v2
+DEFAULT_RECOMMENDATIONS=5
+MAX_RECOMMENDATIONS=20
