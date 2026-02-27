@@ -30,7 +30,7 @@
       <div class="dash-header">
         <div>
           <div class="section-label">Intelligence Dashboard</div>
-          <h1 class="dash-title">Kenya Career Market Overview</h1>
+          <h1 class="dash-title">Career Market Overview</h1>
           <p class="dash-sub">Real-time insights from O*NET, BLS projections, and LinkedIn job posting data.</p>
         </div>
         <div class="dash-filters">
@@ -41,6 +41,9 @@
         </div>
       </div>
 
+      <!-- ── Personal Results Banner (from sessionStorage) ────────── -->
+      <div id="personalBanner" class="hidden"></div>
+
       <!-- Loading -->
       <div id="dashLoading" class="loading-state" style="min-height:300px;">
         <div class="spinner" style="width:40px;height:40px;border-width:3px;"></div>
@@ -49,6 +52,13 @@
 
       <!-- Content -->
       <div id="dashContent" class="hidden">
+
+        <!-- Market data divider -->
+        <div class="market-divider">
+          <div class="market-divider-line"></div>
+          <div class="market-divider-label">Career Market Overview</div>
+          <div class="market-divider-line"></div>
+        </div>
 
         <!-- KPI row -->
         <div class="kpi-row" id="kpiRow"></div>
