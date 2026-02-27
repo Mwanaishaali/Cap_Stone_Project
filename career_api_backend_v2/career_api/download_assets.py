@@ -32,8 +32,17 @@ PROC   = BASE / "DATA" / "processed"
 
 
 def already_downloaded() -> bool:
-    """Skip download if master parquet already exists."""
-    return (PROC / "master_occupation_profiles.parquet").exists()
+    """Check if real model files are present and non-empty."""
+    marker = PROC / "master_occupation_profiles.parquet"
+    if not marker.exists():
+        return False
+    # Also verify it's not empty (more than 10KB)
+    if marker.stat().st_size < 10_000:
+        return False
+    pkl_files = list(MODELS.glob("*.pkl"))
+    if len(pkl_files) < 5:
+        return False
+    return True
 
 
 def download_folder(folder_id: str, dest: Path, name: str):
