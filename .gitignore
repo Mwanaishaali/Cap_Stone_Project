@@ -220,7 +220,7 @@ __marimo__/
 # ======================
 
 # Model artifacts / serialized objects
-models/
+/models/
 *.pkl
 *.joblib
 *.pickle
