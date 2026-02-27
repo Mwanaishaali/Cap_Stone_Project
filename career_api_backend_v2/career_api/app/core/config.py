@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: List[str] = ["*"]  # Restrict in production
 
     # ── File paths (resolved relative to project root) ────────────────────────
-    BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent  # career_api/
+    BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent.parent  # Cap_Stone_Project/
     ARTIFACTS_DIR: Path = BASE_DIR.parent / "artifacts"
     PROCESSED_DIR: Path = BASE_DIR.parent / "DATA" / "processed"
     MODEL_DIR: Path = BASE_DIR.parent / "models"
