@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Career Matches — CareerIQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/form.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="logo">Career<span>IQ</span></a>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="dashboard.html" class="btn-nav">Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="form-page">
+    <div class="form-container">
+
+      <!-- Progress indicator -->
+      <div class="progress-steps" id="progressSteps">
+        <div class="progress-step active" data-step="1">
+          <div class="ps-circle">1</div>
+          <div class="ps-label">Education</div>
+        </div>
+        <div class="progress-connector"></div>
+        <div class="progress-step" data-step="2">
+          <div class="ps-circle">2</div>
+          <div class="ps-label">Profile</div>
+        </div>
+        <div class="progress-connector"></div>
+        <div class="progress-step" data-step="3">
+          <div class="ps-circle">3</div>
+          <div class="ps-label">Skills</div>
+        </div>
+      </div>
+
+      <form id="careerForm">
+
+        <!-- ── STEP 1: Education level ──────────────────────────── -->
+        <div class="form-step active" data-step="1">
+          <div class="step-header">
+            <h1 class="step-title">What's your education level?</h1>
+            <p class="step-desc">Select the option that best describes you right now.</p>
+          </div>
+
+          <div class="edu-grid">
+            <label class="edu-card" for="edu-cbc">
+              <input type="radio" id="edu-cbc" name="user_type" value="cbc" />
+              <div class="edu-card-inner">
+                <div class="edu-icon">🎓</div>
+                <div class="edu-title">CBC Student</div>
+                <div class="edu-desc">Currently in the Competency Based Curriculum system</div>
+              </div>
+            </label>
+            <label class="edu-card" for="edu-844">
+              <input type="radio" id="edu-844" name="user_type" value="8-4-4" />
+              <div class="edu-card-inner">
+                <div class="edu-icon">📚</div>
+                <div class="edu-title">8-4-4 Student</div>
+                <div class="edu-desc">KCSE student or recent high school graduate</div>
+              </div>
+            </label>
+            <label class="edu-card" for="edu-grad">
+              <input type="radio" id="edu-grad" name="user_type" value="graduate" />
+              <div class="edu-card-inner">
+                <div class="edu-icon">🏛️</div>
+                <div class="edu-title">Graduate</div>
+                <div class="edu-desc">University degree holder (Bachelor's or above)</div>
+              </div>
+            </label>
+            <label class="edu-card" for="edu-pro">
+              <input type="radio" id="edu-pro" name="user_type" value="professional" />
+              <div class="edu-card-inner">
+                <div class="edu-icon">💼</div>
+                <div class="edu-title">Professional</div>
+                <div class="edu-desc">Already working and looking to grow or transition</div>
+              </div>
+            </label>
+          </div>
+
+          <div class="step-nav">
+            <div></div>
+            <button type="button" class="btn-primary" id="step1Next">Continue →</button>
+          </div>
+        </div>
+
+        <!-- ── STEP 2: Education-specific fields ───────────────── -->
+        <div class="form-step" data-step="2">
+          <div class="step-header">
+            <h1 class="step-title" id="step2Title">Tell us about your studies</h1>
+            <p class="step-desc" id="step2Desc">These details help us personalise your recommendations.</p>
+          </div>
+
+          <div id="dynamicFields" class="dynamic-fields"></div>
+
+          <div class="step-nav">
+            <button type="button" class="btn-ghost" id="step2Back">← Back</button>
+            <button type="button" class="btn-primary" id="step2Next">Continue →</button>
+          </div>
+        </div>
+
+        <!-- ── STEP 3: Skills & goals ──────────────────────────── -->
+        <div class="form-step" data-step="3">
+          <div class="step-header">
+            <h1 class="step-title">Skills & career goals</h1>
+            <p class="step-desc">The more detail you give, the better your matches will be.</p>
+          </div>
+
+          <div class="fields-group">
+            <div class="field">
+              <label class="field-label" for="skills">
+                Your skills <span class="field-required">*</span>
+              </label>
+              <input
+                type="text"
+                id="skills"
+                name="skills"
+                class="field-input"
+                placeholder="e.g. python, data analysis, communication, leadership"
+              />
+              <div class="field-hint">Separate skills with commas. Include both technical and soft skills.</div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="career_goals">
+                Career goals <span class="field-required">*</span>
+              </label>
+              <textarea
+                id="career_goals"
+                name="career_goals"
+                class="field-textarea"
+                rows="3"
+                placeholder="e.g. I want to work in data science and build AI products that help people in Africa"
+              ></textarea>
+            </div>
+
+            <div class="optional-toggle" id="optionalToggle">
+              <button type="button" class="toggle-btn" id="toggleOptional">
+                ＋ Add optional details (interests & soft skills)
+              </button>
+            </div>
+
+            <div class="optional-fields hidden" id="optionalFields">
+              <div class="field">
+                <label class="field-label" for="interests">Interests</label>
+                <input
+                  type="text"
+                  id="interests"
+                  name="interests"
+                  class="field-input"
+                  placeholder="e.g. technology, entrepreneurship, healthcare, sports"
+                />
+              </div>
+              <div class="field">
+                <label class="field-label" for="soft_skills">Soft skills</label>
+                <input
+                  type="text"
+                  id="soft_skills"
+                  name="soft_skills"
+                  class="field-input"
+                  placeholder="e.g. teamwork, public speaking, problem solving, creativity"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div id="formError" class="alert alert-error hidden" style="margin-top:16px;"></div>
+
+          <div class="step-nav">
+            <button type="button" class="btn-ghost" id="step3Back">← Back</button>
+            <button type="submit" class="btn-primary" id="submitBtn">
+              <span id="submitText">Get My Career Matches →</span>
+              <div class="spinner hidden" id="submitSpinner" style="width:20px;height:20px;border-width:2px;"></div>
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/form.js"></script>
+</body>
+</html>
