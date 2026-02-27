@@ -2,13 +2,13 @@
  * CareerIQ — API Configuration
  * ─────────────────────────────
  * Change API_BASE_URL to your deployed backend URL when hosting on Render.
- * For local development, leave as http://localhost:8000
+ * For local development, leave as https://careeriq-api.onrender.com/
  */
 
 const CONFIG = {
   // ── Change this when you deploy to Render ──────────────────────────────
-  API_BASE_URL: "http://localhost:8000",
-  // API_BASE_URL: "https://your-app-name.onrender.com",  // ← uncomment when deployed
+  API_BASE_URL: "https://careeriq-api.onrender.com/",
+
 
   API_V1: "/api/v1",
 };
