@@ -7,7 +7,7 @@
 
 const CONFIG = {
   // ── Change this when you deploy to Render ──────────────────────────────
-  API_BASE_URL: "https://careeriq-api.onrender.com/",
+  API_BASE_URL: "https://careeriq-api.onrender.com",
 
 
   API_V1: "/api/v1",
