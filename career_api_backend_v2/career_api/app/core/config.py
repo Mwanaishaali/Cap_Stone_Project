@@ -19,7 +19,13 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
 
     # ── CORS ──────────────────────────────────────────────────────────────────
-    ALLOWED_ORIGINS: List[str] = ["*"]  # Restrict in production
+    ALLOWED_ORIGINS: list[str] = []
+
+@validator('ALLOWED_ORIGINS', pre=True)
+def parse_origins(cls, v):
+    if isinstance(v, str):
+        return [i.strip() for i in v.split(',')]
+    return v
 
     # ── File paths (resolved relative to project root) ────────────────────────
     BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent.parent  # Cap_Stone_Project/
