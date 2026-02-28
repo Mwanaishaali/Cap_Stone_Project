@@ -1,0 +1,40 @@
+# Jupyter notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# Large data files
+*.pkl
+*.npy
+*.csv
+*.h5
+*.bin
+*.pt
+*.pth
+*.joblib
+*.parquet
+
+# Project folders with heavy files
+DATA/
+models/
+artifacts/
+figures/
+src/models/
+src/artifacts/
+src/DATA/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment files
+.env
+venv/
+env/
+
+# Reports and presentations
+*.pdf
+*.pptx
+
+# Scraping scripts output
+*.json
