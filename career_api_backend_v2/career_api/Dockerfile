@@ -7,17 +7,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Python deps
+# Python deps - CPU-only torch first to avoid 2GB CUDA version
+RUN pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu \
+    torch==2.2.0+cpu
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy app code
 COPY app/ ./app/
-
-# Mount points for model artifacts (bind-mount at runtime)
-# /artifacts   → your project's artifacts/ folder
-# /data        → your project's DATA/processed/ folder
-# /models      → your project's models/ folder
 
 ENV ARTIFACTS_DIR=/artifacts \
     PROCESSED_DIR=/data \
