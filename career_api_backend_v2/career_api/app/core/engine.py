@@ -15,6 +15,7 @@ Load order mirrors the notebook dependency chain:
 from __future__ import annotations
 
 import json
+import os
 import time
 import warnings
 from pathlib import Path
@@ -70,6 +71,58 @@ class CareerIntelligenceEngine:
     # LOADING
     # ────────────────────────────────────────────────────────────────────────
 
+    def _download_from_gdrive(self, A: Path, M: Path, P: Path):
+        """Download artifacts, models, and processed data from Google Drive."""
+        from app.core.config import settings
+        try:
+            import gdown
+        except ImportError:
+            print("  ⚠️  gdown not installed — skipping Google Drive download")
+            return
+
+        os.makedirs(str(A), exist_ok=True)
+        os.makedirs(str(M), exist_ok=True)
+        os.makedirs(str(P), exist_ok=True)
+
+        if settings.GDRIVE_ARTIFACTS_ID:
+            print("  ⬇️  Downloading artifacts from Google Drive...")
+            try:
+                gdown.download_folder(
+                    id=settings.GDRIVE_ARTIFACTS_ID,
+                    output=str(A),
+                    quiet=False,
+                    use_cookies=False
+                )
+                print("  ✅  Artifacts downloaded.")
+            except Exception as e:
+                print(f"  ⚠️  Artifacts download failed: {e}")
+
+        if settings.GDRIVE_MODELS_ID:
+            print("  ⬇️  Downloading models from Google Drive...")
+            try:
+                gdown.download_folder(
+                    id=settings.GDRIVE_MODELS_ID,
+                    output=str(M),
+                    quiet=False,
+                    use_cookies=False
+                )
+                print("  ✅  Models downloaded.")
+            except Exception as e:
+                print(f"  ⚠️  Models download failed: {e}")
+
+        if settings.GDRIVE_PROCESSED_ID:
+            print("  ⬇️  Downloading processed data from Google Drive...")
+            try:
+                gdown.download_folder(
+                    id=settings.GDRIVE_PROCESSED_ID,
+                    output=str(P),
+                    quiet=False,
+                    use_cookies=False
+                )
+                print("  ✅  Processed data downloaded.")
+            except Exception as e:
+                print(f"  ⚠️  Processed data download failed: {e}")
+
     def load(self, artifacts_dir: Path | None = None, model_dir: Path | None = None,
              processed_dir: Path | None = None):
         """Load all ML artifacts. Called once at application startup."""
@@ -78,6 +131,9 @@ class CareerIntelligenceEngine:
         A = artifacts_dir or settings.ARTIFACTS_DIR
         M = model_dir or settings.MODEL_DIR
         P = processed_dir or settings.PROCESSED_DIR
+
+        # ── Download from Google Drive before loading ─────────────────────
+        self._download_from_gdrive(A, M, P)
 
         self._load_data(P)
         self._load_models(M)
@@ -346,7 +402,6 @@ class CareerIntelligenceEngine:
         user_type         = raw_input.get("user_type", "graduate").lower()
         career_goals      = raw_input.get("career_goals", "").lower()
 
-        # ── Filter by education / job zone ────────────────────────────────────
         allowed_zones = self.USER_TYPE_JOB_ZONES.get(user_type, [1, 2, 3, 4, 5])
         df = self.master.copy()
         if "job_zone" in df.columns and allowed_zones:
@@ -355,16 +410,13 @@ class CareerIntelligenceEngine:
             df = self.master.copy()
 
         if not self.SKILL_COLS:
-            # Return top occupations by future_proof_score as fallback
             top = df.sort_values("future_proof_score", ascending=False).head(n)
             return self._format_recommendations(top, {})
 
-        # ── Cosine similarity between user skills and each occupation ─────────
         skill_matrix = df[self.SKILL_COLS].fillna(0).values
         user_vec     = np.array([user_skill_scores.get(c, 0.0) for c in self.SKILL_COLS])
 
         if user_vec.sum() == 0:
-            # No skill signal — rank by future_proof_score
             top = df.sort_values("future_proof_score", ascending=False).head(n)
             return self._format_recommendations(top, user_skill_scores)
 
@@ -372,7 +424,6 @@ class CareerIntelligenceEngine:
         df = df.copy()
         df["_cosine_sim"] = sims
 
-        # ── Apply career goal boost ────────────────────────────────────────────
         boosts = self.CAREER_GOAL_BOOSTS.get("keywords", {})
         def goal_boost(row):
             bonus = 0.0
@@ -388,7 +439,6 @@ class CareerIntelligenceEngine:
         else:
             df["_score"] = df["_cosine_sim"]
 
-        # ── Ranker re-scoring (GBM) if available ─────────────────────────────
         if self._ranker is not None and self._scaler is not None:
             try:
                 feats = df[self.SKILL_COLS].fillna(0).values
@@ -396,13 +446,12 @@ class CareerIntelligenceEngine:
                 ranker_scores = self._ranker.predict_proba(feats_scaled)[:, 1]
                 df["_score"] = 0.6 * df["_score"] + 0.4 * ranker_scores
             except Exception:
-                pass  # fallback to cosine only
+                pass
 
         top = df.nlargest(n, "_score")
         return self._format_recommendations(top, user_skill_scores)
 
     def _safe_float(self, val, default=0.0) -> float:
-        """Convert to float, replacing NaN/Inf with default."""
         try:
             v = float(val)
             if np.isnan(v) or np.isinf(v):
@@ -412,11 +461,9 @@ class CareerIntelligenceEngine:
             return default
 
     def _get_demand(self, row) -> str:
-        """Try multiple possible column names for demand level."""
         for col in ["demand_level", "demand", "growth_category", "bls_demand_level"]:
             val = row.get(col, None)
             if val and str(val).lower() not in ("nan", "none", "unknown", ""):
-                # normalise to High/Medium/Low
                 v = str(val).strip()
                 if v in ("High", "Medium", "Low"):
                     return v
@@ -431,7 +478,6 @@ class CareerIntelligenceEngine:
 
     def _format_recommendations(self, df: pd.DataFrame,
                                   user_skill_scores: dict) -> pd.DataFrame:
-        # ── Normalise scores to [0,1] range for proper percentage display ────
         scores = df.get("_score", pd.Series(dtype=float))
         if len(scores) > 0:
             s_min = self._safe_float(scores.min(), 0.0)
@@ -444,10 +490,9 @@ class CareerIntelligenceEngine:
         for rank, (_, row) in enumerate(df.iterrows(), start=1):
             raw_score = self._safe_float(row.get("_score", 0.5), 0.5)
 
-            # Scale: map score range to 55–98% for realistic display
             if score_range > 0:
-                normalised = (raw_score - s_min) / score_range   # 0–1
-                match_pct  = round(55 + normalised * 43, 1)       # 55–98%
+                normalised = (raw_score - s_min) / score_range
+                match_pct  = round(55 + normalised * 43, 1)
             else:
                 match_pct = 70.0
 
@@ -472,10 +517,8 @@ class CareerIntelligenceEngine:
                             occupation_row: pd.Series,
                             top_n_gaps: int = 8,
                             top_n_strong: int = 5) -> dict:
-        """Compute per-occupation skills gap report."""
         occ_name  = occupation_row.get("occupation", "Unknown")
 
-        # Guard: sum raw skill scores; use 1.0 floor to prevent division by zero
         raw_scores = []
         for c in self.SKILL_COLS:
             try:
@@ -519,7 +562,6 @@ class CareerIntelligenceEngine:
             key=lambda x: x["current"], reverse=True
         )[:top_n_strong]
 
-        # Alignment score: 1 - weighted gap sum / max possible
         max_gap    = sum(r * importance.get(c, 0.0)
                          for c, r in zip(self.SKILL_COLS, raw_scores))
         actual_gap = sum(g["weighted_gap"] for g in gap_details)
@@ -538,7 +580,6 @@ class CareerIntelligenceEngine:
     def search_courses_for_skill(self, skill_name: str, top_k: int = 3,
                                   level_filter: str | None = None,
                                   min_quality: float = 0.3) -> list[dict]:
-        """Find best courses to address a specific skill gap."""
         if self._course_tfidf is None or self._course_matrix is None or self.courses is None:
             return []
 
@@ -574,7 +615,6 @@ class CareerIntelligenceEngine:
 
     def generate_learning_path(self, gap_report: dict, user_type: str = "graduate",
                                 courses_per_gap: int = 2) -> dict:
-        """Build a staged learning path from a gap report."""
         edu_levels = self.EDUCATION_COURSE_LEVELS.get(user_type.lower(),
                                                         ["Foundation", "Intermediate"])
         top_gaps = gap_report.get("top_gaps", [])
@@ -585,18 +625,15 @@ class CareerIntelligenceEngine:
             stage_gaps    = top_gaps[stage_idx - 1::len(edu_levels)] if top_gaps else []
             stage_courses = []
             for gap in stage_gaps[:4]:
-                # First try with level filter for best match
                 courses = self.search_courses_for_skill(
                     gap["col"], top_k=courses_per_gap, level_filter=level
                 )
-                # If no courses found at that level, fall back to any level
                 if not courses:
                     courses = self.search_courses_for_skill(
                         gap["col"], top_k=courses_per_gap, level_filter=None
                     )
                 stage_courses.extend(courses)
 
-            # Deduplicate courses by title within the stage
             seen_titles   = set()
             unique_courses = []
             for c in stage_courses:
@@ -638,30 +675,23 @@ class CareerIntelligenceEngine:
         return advice_map.get(risk_category, [])
 
     def _sanitise(self, obj):
-        """Recursively replace NaN/Inf in dicts/lists so JSON serialisation never fails.
-
-        NOTE: NaN/Inf floats are replaced with 0.0 (not None) so that Pydantic
-        required-float fields (e.g. SkillGap.importance, SkillGap.weighted_gap)
-        are never handed a null value, which would cause ResponseValidationError.
-        """
         if isinstance(obj, dict):
             return {k: self._sanitise(v) for k, v in obj.items()}
         if isinstance(obj, list):
             return [self._sanitise(v) for v in obj]
         if isinstance(obj, float):
             if np.isnan(obj) or np.isinf(obj):
-                return 0.0          # ← was None; Pydantic float fields must not receive null
+                return 0.0
             return obj
         if isinstance(obj, np.floating):
             v = float(obj)
-            return 0.0 if (np.isnan(v) or np.isinf(v)) else v   # ← was None
+            return 0.0 if (np.isnan(v) or np.isinf(v)) else v
         if isinstance(obj, np.integer):
             return int(obj)
         return obj
 
     def run_full_pipeline(self, raw_input: dict, n: int = 5,
                            courses_per_gap: int = 2) -> dict:
-        """Execute the complete Career Intelligence pipeline."""
         t0 = time.perf_counter()
 
         recommendations = self.recommend_careers(raw_input, n=n)
@@ -722,3 +752,4 @@ class CareerIntelligenceEngine:
 
 # ── Global singleton ──────────────────────────────────────────────────────────
 engine = CareerIntelligenceEngine()
+
