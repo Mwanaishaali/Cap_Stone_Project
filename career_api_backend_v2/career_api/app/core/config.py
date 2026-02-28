@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import List
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import field_validator
 
 
 class Settings(BaseSettings):
@@ -22,12 +21,8 @@ class Settings(BaseSettings):
     # ── CORS ──────────────────────────────────────────────────────────────────
     ALLOWED_ORIGINS: list[str] = []
 
-@field_validator('ALLOWED_ORIGINS', mode='before')
-@classmethod
-def parse_origins(cls, v):
-
-    # ── File paths (resolved relative to project root) ────────────────────────
-    BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent.parent  # Cap_Stone_Project/
+    # ── File paths ────────────────────────────────────────────────────────────
+    BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent.parent
     ARTIFACTS_DIR: Path = BASE_DIR.parent / "artifacts"
     PROCESSED_DIR: Path = BASE_DIR.parent / "DATA" / "processed"
     MODEL_DIR: Path = BASE_DIR.parent / "models"
