@@ -1,4 +1,5 @@
 # Career & Skills Intelligence System
+https://careeriq-g4.netlify.app/-visit this link to access the recommendation system
 
 > An AI-powered career recommendation platform that helps Kenyan learners and professionals discover their best-fit careers, understand skill gaps, assess automation risk, and receive personalised learning roadmaps.
 
