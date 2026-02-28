@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import List
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import validator
 
 
 class Settings(BaseSettings):
