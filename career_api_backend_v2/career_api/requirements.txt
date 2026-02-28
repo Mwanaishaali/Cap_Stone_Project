@@ -13,7 +13,9 @@ joblib>=1.4.0
 pyarrow>=15.0.0
 
 # ── NLP / Semantic Search ─────────────────────────────────────────────────────
-sentence-transformers>=2.7.0
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.0.0+cpu
+
 
 # ── Asset download (Google Drive) ─────────────────────────────────────────────
 gdown>=5.1.0
