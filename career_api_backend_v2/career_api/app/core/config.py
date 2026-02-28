@@ -1,11 +1,9 @@
+
 """Application configuration — reads from environment variables."""
 from __future__ import annotations
-
 from pathlib import Path
 from typing import List
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
 
 class Settings(BaseSettings):
     # ── Project metadata ──────────────────────────────────────────────────────
@@ -21,11 +19,16 @@ class Settings(BaseSettings):
     # ── CORS ──────────────────────────────────────────────────────────────────
     ALLOWED_ORIGINS: list[str] = []
 
+    # ── Google Drive artifact IDs ──────────────────────────────────────────────
+    GDRIVE_ARTIFACTS_ID: str = ""
+    GDRIVE_MODELS_ID: str = ""
+    GDRIVE_PROCESSED_ID: str = ""
+
     # ── File paths ────────────────────────────────────────────────────────────
     BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent.parent
-    ARTIFACTS_DIR: Path = BASE_DIR.parent / "artifacts"
-    PROCESSED_DIR: Path = BASE_DIR.parent / "DATA" / "processed"
-    MODEL_DIR: Path = BASE_DIR.parent / "models"
+    ARTIFACTS_DIR: Path = Path("/artifacts")
+    PROCESSED_DIR: Path = Path("/data")
+    MODEL_DIR: Path = Path("/models")
 
     # ── Model settings ────────────────────────────────────────────────────────
     SENTENCE_TRANSFORMER_MODEL: str = "all-MiniLM-L6-v2"
@@ -39,5 +42,5 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-
 settings = Settings()
+
