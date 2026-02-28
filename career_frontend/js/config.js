@@ -7,7 +7,7 @@
 
 const CONFIG = {
   // ── Change this when you deploy to Render ──────────────────────────────
-  API_BASE_URL: "https://capstoneproject-production-cc97.up.railway.app/",
+  API_BASE_URL: "https://capstoneproject-production-cc97.up.railway.app",
 
 
   API_V1: "/api/v1",
