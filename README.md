@@ -5,7 +5,6 @@ https://careeriq-g4.netlify.app/-visit this link to access the recommendation sy
 
 
 
----
 
 ##  Table of Contents
 
